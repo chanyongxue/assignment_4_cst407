@@ -7,20 +7,18 @@ final AuthMethods _auth = AuthMethods();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
+    return Container(
+        color: Colors.black,
         alignment: Alignment.center,
                 child: FlatButton.icon(
                   icon: Icon(Icons.person_outline), 
                   color: Colors.white,
                   label: Text('log out',
-                  style: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Colors.black)),
                    onPressed: () async {
                     await _auth.signOut();
                     Navigator.pushReplacementNamed(context, '/wrapper');
                 },
-      ),
       ),
     );
   }
