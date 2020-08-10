@@ -12,7 +12,6 @@ class AnimeDetails extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        //liking function
         actions: <Widget>[
           FavoriteButton(),
         ],
