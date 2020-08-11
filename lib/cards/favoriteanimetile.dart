@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 class FavoriteAnimeTile extends StatelessWidget {
-  const FavoriteAnimeTile({Key key, this.top}) : super(key: key);
+  const FavoriteAnimeTile({Key key, this.anime}) : super(key: key);
 
-  final Top top;
+  final Anime anime;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(top.title,
+      title: Text(anime.title,
       style: TextStyle(color: Colors.white),
       ),
       trailing: FavoriteButton(),
