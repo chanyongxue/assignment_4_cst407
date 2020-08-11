@@ -8,10 +8,8 @@ import 'package:jikan_api/jikan_api.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import '../state/homestate.dart';
-import 'package:assignment_4_cst407/auth/auth_methods.dart';
 
 class Home extends StatelessWidget {
-  final AuthMethods _auth = AuthMethods();
 
   Widget _homeBuild() {
     return ListView(
@@ -97,7 +95,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _homeWidgets = <Widget>[
-      _homeBuild(),
+      /*Placeholder(color: Colors.orange),*/_homeBuild(),
       FavoriteAnimeList(),
       Profile(),
     ];
