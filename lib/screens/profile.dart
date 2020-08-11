@@ -1,9 +1,8 @@
-import 'package:assignment_4_cst407/auth/auth_methods.dart';
+import 'package:assignment_4_cst407/state/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Profile extends StatelessWidget {
-
-final AuthMethods _auth = AuthMethods();
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +15,11 @@ final AuthMethods _auth = AuthMethods();
                   label: Text('log out',
                   style: TextStyle(color: Colors.black)),
                    onPressed: () async {
-                    await _auth.signOut();
+                    await authProvider.readOwner(ProviderStateOwner()).state.signOut();
                     Navigator.pushReplacementNamed(context, '/wrapper');
                 },
       ),
+
     );
   }
 }
