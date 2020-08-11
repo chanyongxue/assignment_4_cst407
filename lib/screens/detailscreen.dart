@@ -1,19 +1,44 @@
 import 'dart:ui';
+import 'package:assignment_4_cst407/state/auth_state.dart';
+import 'package:assignment_4_cst407/state/database_state.dart';
 import 'package:assignment_4_cst407/widgets/favoritebutton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 class AnimeDetails extends StatelessWidget {
+  Future<bool> isLiked(Top top) async {
+    return await databaseProvider
+        .readOwner(ProviderStateOwner())
+        .state
+        .animeExistsInUserLikes(
+            await authProvider
+                .readOwner(ProviderStateOwner())
+                .state
+                .currentFirebaseUser
+                .then((user) => user.uid),
+            top.malId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Top top = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: <Widget>[
-          FavoriteButton(),
+          FutureBuilder<bool>(
+            future: isLiked(top),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return snapshot.hasData
+                  ? FavoriteButton(
+                      top: top,
+                      isLiked: snapshot.data,
+                    )
+                  : Center(child: CircularProgressIndicator());
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -35,7 +60,7 @@ class AnimeDetails extends StatelessWidget {
                       ),
                     ),
                     Text(
-                     top.title,
+                      top.title,
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -84,7 +109,8 @@ class AnimeDetails extends StatelessWidget {
                     ),
                     Hero(
                       tag: top.malId,
-                      child: Image.network(top.imageUrl, fit: BoxFit.contain, width: 300),
+                      child: Image.network(top.imageUrl,
+                          fit: BoxFit.contain, width: 300),
                     ),
                   ],
                 ),
