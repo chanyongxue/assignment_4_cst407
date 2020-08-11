@@ -2,48 +2,55 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseConnection {
   Firestore _database = Firestore.instance;
-  Future<List<String>> getUserLikes(String uid) async {
+
+  void addUser(String uid, Map<String, dynamic> userData) {
+    _database.collection('users').document(uid).setData(userData);
+  }
+
+  Future<List<int>> getUserLikes(String uid) async {
     var collect = await _database
         .collection('users')
         .document(uid)
         .collection('likes')
         .getDocuments();
-    var malids = List<String>();
+    var malids = List<int>();
     collect.documents.forEach((doc) {
-      malids.add(doc.data.containsKey('malid').toString());
+      malids.add(doc.data['malid'] as int);
     });
     return Future.value(malids);
   }
 
-  void updateUserLikes(String uid, String malid) async {
+  void updateUserLikes(String uid, int malid) async {
     await animeExistsInUserLikes(uid, malid)
         ? removeAnimeFromUserLikes(uid, malid)
         : addAnimeToUserLikes(uid, malid);
   }
 
-  Future<bool> animeExistsInUserLikes(String uid, String malid) async {
+  Future<bool> animeExistsInUserLikes(String uid, int malid) async {
     var collect = await _database
         .collection('users')
         .document(uid)
         .collection('likes')
-        .getDocuments();
-    return Future.value(collect.documents.contains(malid));
+        .document(malid.toString())
+        .get();
+    return Future.value(collect != null);
   }
 
-  void removeAnimeFromUserLikes(String uid, String malid) async {
+  void removeAnimeFromUserLikes(String uid, int malid) async {
     await _database
         .collection('users')
         .document(uid)
         .collection('likes')
-        .document(malid)
+        .document(malid.toString())
         .delete();
   }
 
-  void addAnimeToUserLikes(String uid, String malid) async {
+  void addAnimeToUserLikes(String uid, int malid) async {
     await _database
         .collection('users')
         .document(uid)
         .collection('likes')
-        .add({'malid': malid});
+        .document(malid.toString())
+        .setData({'malid': malid});
   }
 }
