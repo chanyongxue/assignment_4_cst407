@@ -16,7 +16,6 @@ class FavoriteAnimeList extends StatelessWidget {
   Widget build(BuildContext context) {
     final _pageController = PagewiseLoadController(
         pageSize: 10,
-        //TODO: load favorite from userlikes on database
         pageFuture: (pageIndex) async {
           var uid = await authProvider
               .read(context)
@@ -27,8 +26,10 @@ class FavoriteAnimeList extends StatelessWidget {
               await databaseProvider.read(context).state.getUserLikes(uid);
           var pageOfLikes = userLikes.skip(pageIndex * 10).take(10).toList();
           var animeList = List<Anime>();
-          pageOfLikes.forEach((animeID) async =>
-              animeList.add(await jikan.read(context).getAnimeInfo(animeID)));
+          pageOfLikes.forEach((animeId) async {
+            var l = await jikan.read(context).getAnimeInfo(animeId);
+                    await Future.delayed(Duration(seconds: 3), () => l);
+          });
           return Future.value(animeList);
         });
     return PagewiseListView(
@@ -37,7 +38,10 @@ class FavoriteAnimeList extends StatelessWidget {
       ),
       scrollDirection: Axis.vertical,
       pageLoadController: _pageController,
-      noItemsFoundBuilder: (context) => Text("You haven't liked anything yet..."),
+      noItemsFoundBuilder: (context) => Text(
+        "You haven't liked anything yet...",
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 }
