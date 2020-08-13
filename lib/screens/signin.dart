@@ -22,11 +22,16 @@ class Signin extends StatelessWidget {
           ),
         ),
       ),
-       onLogin: (LoginData credentials) => authProvider.readOwner(ProviderStateOwner()).state.signIn(credentials.name, credentials.password), 
-       //TODO: recover password
-       onRecoverPassword: null, 
-       onSignup: (LoginData credentials) => authProvider.readOwner(ProviderStateOwner()).state.registerWithEmailAndPassword(credentials.name, credentials.password),
-       onSubmitAnimationCompleted: () => Navigator.pushNamed(context, '/home'),
+      onLogin: (LoginData credentials) => authProvider
+          .readOwner(ProviderStateOwner())
+          .state
+          .signIn(credentials.name, credentials.password),
+      onRecoverPassword: null,
+      onSignup: (LoginData credentials) => authProvider
+          .readOwner(ProviderStateOwner())
+          .state
+          .registerWithEmailAndPassword(credentials.name, credentials.password),
+      onSubmitAnimationCompleted: () => Navigator.pushNamed(context, '/home'),
     );
   }
 }
