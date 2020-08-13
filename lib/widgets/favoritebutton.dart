@@ -4,42 +4,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
-class FavoriteButton extends StatefulWidget {
-  FavoriteButton({Key key, this.top, this.isLiked}) : super(key: key);
+final buttonStateProvider = StateProvider((ref) => false);
+
+class FavoriteButton extends StatelessWidget {
+  FavoriteButton({Key key, this.top}) : super(key: key);
 
   final Top top;
-  final bool isLiked;
-
-  @override
-  _FavoriteButtonState createState() => _FavoriteButtonState();
-}
-
-class _FavoriteButtonState extends State<FavoriteButton> {
-  //TODO: set isLiked to database
-  var isLiked = false;
-  @override
-  void initState() async {
-    super.initState();
-    isLiked = widget.isLiked;
-  }
-
   @override
   Widget build(BuildContext context) {
+    Future<bool> isLiked(Top top) async {
+      var uid = await authProvider
+          .readOwner(ProviderStateOwner())
+          .state
+          .currentFirebaseUser
+          .then((user) => user.uid);
+      return await databaseProvider
+          .readOwner(ProviderStateOwner())
+          .state
+          .animeExistsInUserLikes(uid, top.malId);
+    }
+
     return IconButton(
-        icon: Icon(
-          Icons.favorite,
-          color: isLiked ? Colors.redAccent : Colors.grey,
-          size: 30,
+        icon: FutureBuilder(
+          future: isLiked(top),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
+              snapshot.connectionState == ConnectionState.done
+                  ? Icon(
+                      Icons.favorite,
+                      color: snapshot.data ? Colors.redAccent : Colors.grey,
+                      size: 30,
+                    )
+                  : CircularProgressIndicator(),
         ),
         onPressed: () async {
+          buttonStateProvider.read(context).state = await isLiked(top);
           databaseProvider.read(context).state.updateUserLikes(
               await authProvider
                   .read(context)
                   .state
                   .currentFirebaseUser
                   .then((user) => user.uid),
-              widget.top.malId);
-          setState(() => isLiked = !isLiked);
+              top.malId);
         });
   }
 }
