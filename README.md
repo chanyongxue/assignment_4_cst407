@@ -1,7 +1,3 @@
-# assignment_4_cst407
+# final-project
 
-Contains: Pagination, Detail Screen, Favoriting Feature, Favorite Page, Login Functionality/Account Creation, API
-
-## Preview
-
-![App Demo](app-4-demo.gif)
+Contains: Pagination, Detail Screen, Favoriting Feature, Favorite Page, Login Functionality/Account Creation, API, Fragments, Firbase Connection
