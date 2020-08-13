@@ -1,25 +1,9 @@
 import 'dart:ui';
-import 'package:assignment_4_cst407/state/auth_state.dart';
-import 'package:assignment_4_cst407/state/database_state.dart';
 import 'package:assignment_4_cst407/widgets/favoritebutton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 class AnimeDetails extends StatelessWidget {
-  Future<bool> isLiked(Top top) async {
-    return await databaseProvider
-        .readOwner(ProviderStateOwner())
-        .state
-        .animeExistsInUserLikes(
-            await authProvider
-                .readOwner(ProviderStateOwner())
-                .state
-                .currentFirebaseUser
-                .then((user) => user.uid),
-            top.malId);
-  }
-
   @override
   Widget build(BuildContext context) {
     final Top top = ModalRoute.of(context).settings.arguments;
@@ -28,17 +12,9 @@ class AnimeDetails extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: <Widget>[
-          FutureBuilder<bool>(
-            future: isLiked(top),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return snapshot.hasData
-                  ? FavoriteButton(
+         FavoriteButton(
                       top: top,
-                      isLiked: snapshot.data,
-                    )
-                  : Center(child: CircularProgressIndicator());
-            },
-          ),
+                    ),
         ],
       ),
       body: SingleChildScrollView(
