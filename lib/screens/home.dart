@@ -95,7 +95,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _homeWidgets = <Widget>[
-      /*Placeholder(color: Colors.orange),*/_homeBuild(),
+      _homeBuild(),
       FavoriteAnimeList(),
       Profile(),
     ];
