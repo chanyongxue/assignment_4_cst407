@@ -33,7 +33,7 @@ class DatabaseConnection {
         .collection('likes')
         .document(malid.toString())
         .get();
-    return Future.value(collect != null);
+    return collect.exists;
   }
 
   void removeAnimeFromUserLikes(String uid, int malid) async {
